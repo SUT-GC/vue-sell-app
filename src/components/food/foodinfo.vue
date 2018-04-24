@@ -182,6 +182,7 @@ export default {
 }
 
 .move-transition-enter, .move-transition-leave-to {
+  transition: all 0.2s linear;
   transform: translate3d(100%,0,0);
 }
 
