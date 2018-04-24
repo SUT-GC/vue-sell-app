@@ -1,13 +1,13 @@
 <template>
     <div class="cartcontrol">
-        <div class="cart-decrease" v-show="food.count > 0" @click="decrFoodCount($event)">
+        <div class="cart-decrease" v-show="food.count > 0" @click.stop="decrFoodCount($event)">
             <i class="icon-remove_circle_outline"></i>
         </div>
         <div class="cart-count" v-show="food.count > 0">
             {{food.count}}
         </div>
         <div class="cart-increase">
-            <i class="icon-add_circle" @click="addFoodCount($event)"></i>
+            <i class="icon-add_circle" @click.stop="addFoodCount($event)"></i>
         </div>
     </div>
 </template>
@@ -33,12 +33,10 @@ export default {
   },
   methods: {
     addFoodCount (event) {
-      if (!event._constructed) {
-        return
-      }
+      console.log(this.food.count)
       Vue.set(this.food, 'count', this.food.count + 1)
     },
-    decrFoodCount () {
+    decrFoodCount (event) {
       if (this.food.count < 0) {
         Vue.set(this.food, 'count', 0)
       } else {
@@ -50,8 +48,6 @@ export default {
 </script>
 
 <style>
-.cartcontrol {
-}
 
 .cart-decrease {
     display: inline-block;

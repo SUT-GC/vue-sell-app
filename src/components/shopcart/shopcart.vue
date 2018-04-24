@@ -1,6 +1,6 @@
 <template>
   <div class="shopcart">
-      <div class="shopcart-left">
+      <div class="shopcart-left" @click="switchListShowSwap">
           <div class="logo-wrapper">
               <div class="logo" :class="{'logo-hight': foodCount > 0}">
                   <i class="icon-shopping_cart"></i>
@@ -24,25 +24,27 @@
               去支付
           </div>
       </div>
-      <div class="showcart-list" v-show="listShow">
-          <div class="list-hearder">
-              <h1 class="header-title">购物车</h1>
-              <span class="empty">清空</span>
-          </div>
-          <div class="list-border">
-              <div class="list-content">
-                  <ul>
-                      <li v-for="selectedFood in selectedFoods" :key="selectedFood.id">
-                          <div class="selected-food-name">{{selectedFood.name}}</div>
-                          <div class="selected-food-price">{{selectedFood.price}}</div>
-                          <div class="selected-food-num">
-                              <cart-control :food="selectedFood"></cart-control>
-                          </div>
-                      </li>
-                  </ul>
-              </div>
-          </div>
-      </div>
+      <transition name="fold">
+        <div class="showcart-list" v-show="listShow">
+            <div class="list-hearder">
+                <h1 class="header-title">购物车</h1>
+                <span class="empty" @click="emptyBuy">清空</span>
+            </div>
+            <div class="list-border">
+                <div class="list-content">
+                    <ul>
+                        <li v-for="selectedFood in selectedFoods" :key="selectedFood.id">
+                            <div class="selected-food-name">{{selectedFood.name}}</div>
+                            <div class="selected-food-price">¥{{selectedFood.price * selectedFood.count}}</div>
+                            <div class="selected-food-num">
+                                <cart-control :food="selectedFood"></cart-control>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+      </transition>
   </div>
 </template>
 
@@ -52,7 +54,7 @@ import CartControl from '../cartcontrol/cartcontrol'
 export default {
   data: function () {
     return {
-      listShow: false
+      listShowSwap: true
     }
   },
   props: {
@@ -90,6 +92,29 @@ export default {
       })
 
       return totle
+    },
+
+    listShow () {
+      if (!this.listShowSwap && this.foodCount > 0) {
+        return true
+      } else {
+        return false
+      }
+    }
+  },
+  methods: {
+    switchListShowSwap () {
+      console.log(this.listShowSwap)
+      if (!this.listShowSwap && this.foodCount > 0) {
+        this.listShowSwap = true
+      } else {
+        this.listShowSwap = false
+      }
+    },
+    emptyBuy () {
+      this.selectedFoods.forEach((food) => {
+        food.count = 0
+      })
     }
   }
 }
@@ -102,20 +127,32 @@ export default {
   display: flex;
   left: 0;
   bottom: 0;
-  z-index: 50;
+  z-index: 30;
   height: 48px;
   width: 100%;
   background-color: #141d27;
 }
 
 .shopcart-left {
+    position: relative;
+    z-index: 50;
     flex: auto;
 }
 
 .shopcart-right {
+    position: relative;
+    z-index: 50;
     flex: 0 0 105px;
     width: 105px;
-    background: aqua;
+    background: aqua
+}
+
+.showcart-list {
+    position: absolute;
+    z-index: -1;
+    left: 0px;
+    bottom: 48px;
+    width: 100%;
 }
 
 .logo-wrapper {
@@ -141,7 +178,6 @@ export default {
 }
 
 .logo-hight {
-    z-index: 60;
     background-color:rgb(0, 160, 220);
     height: 100%;
     width: 100%;
@@ -220,6 +256,76 @@ export default {
 
 .shotcart-right-pay {
     background-color: #00b43c;
+}
+
+.list-hearder {
+    height: 40px;
+    line-height: 40px;
+    padding: 0px 18px 0 18px;
+    background-color: #f3f5f7;
+    border: 1px solid rgba(7, 17, 27, 0.1);
+}
+
+.header-title {
+    font-size: 14px;
+    float: left;
+    color: rgb(7, 17, 27)
+}
+
+.empty {
+    font-size: 12px;
+    float:right;
+    color: rgb(0, 160, 220);
+}
+
+.fold-enter-to{
+    transition: all 0.5s;
+    transform: translate(0, 0);
+}
+
+.fold-leave {
+    transform: translate(0, 0);
+}
+
+.fold-leave-to {
+    transition: all 0.5s;
+    transform: translate(0, 100%);
+}
+
+.fold-enter {
+    transform: translate(0, 100%);
+}
+
+.list-content {
+    padding: 0 18px;
+    max-height: 217px;
+    overflow: auto;
+    background: #fff;
+}
+
+.list-content li {
+    line-height: 40px;
+    font-size: 14px;
+    display: flex;
+    border-bottom: 1px solid rgba(7, 17, 27, 0.1);
+}
+
+.selected-food-num{
+    display: inline-block;
+    flex: 0 0 90px;
+    padding-top: 7px;
+}
+
+.selected-food-price {
+    display: inline-block;
+    flex: 0 0 60px;
+    color:red;
+    font-weight: 700
+}
+
+.selected-food-name {
+    display: inline-block;
+    flex: auto;
 }
 
 </style>

@@ -13,8 +13,8 @@
         <li v-for="group in groups" class="groups-hook" :key="group.id">
           <h1 class="group-name">{{group.name}}</h1>
           <ul v-if="group.foods" class="foods">
-            <li class="food" v-for="food in group.foods" :key="food.id">
-              <div class="food-icon">
+            <li class="food"  @click="showFoodInfo(food, $event)" v-for="food in group.foods" :key="food.id">
+              <div class="food-icon" >
                 <img :src="food.icon"/>
               </div>
               <div class="food-content">
@@ -37,6 +37,7 @@
         </li>
       </ul>
     </div>
+    <food-info :food="showFoodItem" ref="foodInfo"></food-info>
     <shop-cart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :selected-foods="selectFoods"></shop-cart>
   </div>
 </template>
@@ -45,6 +46,7 @@
 import BScroll from 'better-scroll'
 import ShopCart from '../shopcart/shopcart'
 import CartControl from '../cartcontrol/cartcontrol'
+import FoodInfo from '../food/foodinfo'
 
 export default {
   name: 'GoodsContent',
@@ -54,12 +56,14 @@ export default {
       groups: [],
       listHeight: [],
       scorllY: 0,
-      seller: ''
+      seller: '',
+      showFoodItem: null
     }
   },
   components: {
     ShopCart,
-    CartControl
+    CartControl,
+    FoodInfo
   },
   props: {
   },
@@ -141,6 +145,14 @@ export default {
       let groups = this.$refs.foods.getElementsByClassName('groups-hook')
       let el = groups[index]
       this.foodsScroll.scrollToElement(el, 300)
+    },
+    showFoodInfo (food, event) {
+      if (!event._constructed) {
+        return
+      }
+      console.log(food)
+      this.showFoodItem = food
+      this.$refs.foodInfo.show()
     }
   }
 }
