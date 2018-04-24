@@ -32,10 +32,28 @@
           </h1>
           <p>{{food.info}}</p>
         </div>
-        <split/>
+        <split v-if="food.info"/>
         <div class="food-info-rating">
           <h1>商品评价</h1>
           <rating-select :select-type="selectType" :only-content="onlyContent" :desc="selectDesc" :ratings="food.ratings" v-on:switchOnlyContent="switchOnlyContent" v-on:switchSelectType="switchSelectType"/>
+        </div>
+        <div class="food-info-rating-content">
+          <ul v-show="food.ratings && food.ratings.length">
+            <li class="rating-item" v-for="rating in getShowRatings(food.ratings, selectType, onlyContent)" :key="rating.id">
+              <div class="rating-time">
+                {{(new Date(rating.rateTime)).Format("yyyy-MM-dd hh:mm")}}
+              </div>
+              <div class="user-info">
+                <div class="user-name">{{rating.username}}</div>
+                <img class="user-img" width="12px" height="12px" :src="rating.avatar"/>
+              </div>
+              <p class="rating-content">
+                <span :class="{'icon-thumb_up': rating.rateType === 0, 'icon-thumb_down': rating.rateType === 1}"></span>
+                {{rating.text}}
+              </p>
+            </li>
+          </ul>
+          <div class="no-ratings" v-show="!food.ratings || food.ratings.length <= 0">暂无评价</div>
         </div>
       </div>
     </transition>
@@ -52,6 +70,25 @@ import Vue from 'vue'
 // const NGEATIVE = 1
 const ALL = 2
 
+Date.prototype.Format = function (fmt) {
+  var o = {
+    'M+': this.getMonth() + 1,
+    'd+': this.getDate(),
+    'h+': this.getHours(),
+    'm+': this.getMinutes(),
+    's+': this.getSeconds(),
+    'q+': Math.floor((this.getMonth() + 3) / 3),
+    'S': this.getMilliseconds()
+  }
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length))
+  }
+  for (var k in o) {
+    if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+  }
+  return fmt
+}
+
 export default {
   props: {
     food: {
@@ -66,7 +103,7 @@ export default {
         positive: '推荐',
         negative: '吐槽'
       },
-      onlyContent: true,
+      onlyContent: false,
       selectType: ALL
     }
   },
@@ -87,7 +124,7 @@ export default {
   methods: {
     show () {
       this.selectType = ALL
-      this.onlyContent = true
+      this.onlyContent = false
       this.showFlat = true
     },
     hide () {
@@ -101,6 +138,27 @@ export default {
     },
     switchSelectType (value) {
       this.selectType = value
+    },
+    getShowRatings (ratings, type, onlyContent) {
+      var result = []
+      if (ratings) {
+        ratings.forEach(p => {
+          if (onlyContent) {
+            if (type === ALL && p.text.length > 0) {
+              result.push(p)
+            }else if (p.rateType === type && p.text.length > 0) {
+              result.push(p)
+            }
+          } else {
+            if (type === ALL) {
+              result.push(p)
+            }else if (p.rateType === type) {
+              result.push(p)
+            }
+          }
+        })
+      }
+      return result
     }
   }
 }
@@ -246,6 +304,67 @@ export default {
   margin-bottom: 6px;
   font-weight: 700;
   color: rgb(7, 17, 27)
+}
+
+.food-info-rating-content {
+  padding: 18px;
+}
+
+.rating-item {
+  position: relative;
+  padding: 16px;
+  border-bottom: 1px solid rgb(7, 17, 27, 0.1);
+  margin-bottom: 15px;
+}
+
+.user-img{
+  vertical-align: top;
+  display: inline-block;
+}
+
+.user-name{
+  display: inline-block;
+  color: rgb(147, 153, 159);
+  vertical-align: top;
+  margin-right: 6px;
+  font-size: 10px;
+}
+
+.rating-time{
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 10px;
+  color: rgb(147, 153, 159);
+  line-height: 12px;
+}
+
+.user-info {
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.rating-content span{
+  font-size: 12px;
+  line-height: 24px;
+  margin-right: 4px;
+}
+
+.rating-content {
+  font-size: 12px;
+  line-height: 16px;
+  color: rgb(7, 17, 27)
+}
+
+.icon-thumb_up {
+  color:rgb(0, 160, 220);
+}
+
+.icon-thumb_down {
+  color: rgb(147, 153, 159);
 }
 
 </style>
