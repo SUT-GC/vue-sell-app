@@ -146,13 +146,13 @@ export default {
           if (onlyContent) {
             if (type === ALL && p.text.length > 0) {
               result.push(p)
-            }else if (p.rateType === type && p.text.length > 0) {
+            } else if (p.rateType === type && p.text.length > 0) {
               result.push(p)
             }
           } else {
             if (type === ALL) {
               result.push(p)
-            }else if (p.rateType === type) {
+            } else if (p.rateType === type) {
               result.push(p)
             }
           }
