@@ -29,9 +29,9 @@
     </div>
     <split/>
     <div class="shop-ratings" v-if="ratings">
-      <ratting-select class="shop-ratings-head" :ratings="selectRattings" :select-type="selectType" :only-content="onlyContent" :decs="desc" v-on:switchOnlyContent="switchOnlyContent" v-on:switchSelectType="switchOnlyContent"/>
+      <ratting-select class="shop-ratings-head" :ratings="ratings" :select-type="selectType" :only-content="onlyContent" :decs="desc" v-on:switchOnlyContent="switchOnlyContent" v-on:switchSelectType="switchSelectType"/>
       <div class="shop-ratings-content">
-        <ul v-for="shoprating in ratings">
+        <ul v-for="shoprating in selectRattings" :key="shoprating.id">
           <li>
             <div class="shop-rating-head">
               <div class="shop-rating-head-left">
@@ -43,7 +43,7 @@
                     {{shoprating.username}}
                   </div>
                   <di class="userinfo-star">
-                    <star :score="shoprating.score" :size="24"/>
+                    <star class="userinfo-star-content" :score="shoprating.score" :size="24"/>
                     <span class="userinfo-delivery-time" v-if="shoprating.deliveryTime">
                       {{shoprating.deliveryTime}}分钟送达
                     </span>
@@ -55,12 +55,13 @@
               </div>
             </div>
             <div class="shop-rating-value">
+                {{shoprating.text}}
             </div>
           </li>
         </ul>
       </div>
     </div>
-    <div class="shop-no-ratings" v-else>
+    <div v-else class="shop-no-ratings" >
       暂无评论
     </div>
   </div>
@@ -71,8 +72,6 @@ import Star from '../star/star'
 import Split from '../split/split'
 import RattingSelect from '../rattingselect/rattingselect'
 
-const POSITIVE = 0
-const NGEATIVE = 1
 const ALL = 2
 
 Date.prototype.Format = function (fmt) {
@@ -163,7 +162,7 @@ export default {
 .ratings {
   position: absolute;
   overflow: auto;
-  top: 175px;
+  top: 180px;
   bottom: 0px;
   left: 0px;
   width: 100%;
@@ -264,7 +263,17 @@ export default {
     border-bottom: 1px solid rgba(147, 153, 159, 0.2);
 }
 
-.shop-rating-head-left-userimg{
+.shop-rating-head-left, .shop-rating-head-right {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.shop-rating-head-right {
+    position: absolute;
+    right: 18px;
+}
+
+.shop-rating-head-left-userimg, .shop-rating-head-left-userinfo, .userinfo-star-content{
     display: inline-block;
 }
 
@@ -272,6 +281,27 @@ export default {
     height: 28px;
     width: 28px;
     border-radius: 14px;
+}
+
+.userinfo-delivery-time, .shop-rating-head-right{
+    font-size: 10px;
+    font-weight: 200;
+    color: rgb(147, 153, 159);
+    line-height: 12px;
+}
+
+.userinfo-name {
+    font-size: 10px;
+    color: rgb(7, 17, 27);
+    line-height: 24px;
+}
+
+.shop-rating-value {
+    margin-left: 28px;
+    margin-top: 6px;
+    font-size: 12px;
+    color:rgb(7, 17, 27);
+    line-height: 18px;
 }
 
 </style>
