@@ -177,7 +177,7 @@ export default {
   flex: 0 0 80px;
   width: 80px;
   background-color: #f3f5f7;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .goods .menu .menu-item{
@@ -190,7 +190,7 @@ export default {
 
 .goods .foods{
   flex: 1;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .menu ul :last-child{
