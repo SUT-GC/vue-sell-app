@@ -111,13 +111,13 @@ export default {
     RattingSelect
   },
   created: function () {
-    this.$http.get('http://localhost:8888/ratings').then(function (response) {
+    this.$http.get('/d2/ratings').then(function (response) {
       this.ratings = response.data
       console.log(this.ratings)
     }, function (response) {
       this.ratings = []
     })
-    this.$http.get('http://localhost:8888/shop').then(function (response) {
+    this.$http.get('/d2/shop').then(function (response) {
       this.seller = response.data
       console.log(this.seller)
     }, function (response) {

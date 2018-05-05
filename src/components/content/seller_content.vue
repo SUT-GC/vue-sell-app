@@ -89,7 +89,7 @@ export default {
     return {
       seller: null,
       error_msg: '',
-      favorite: false,
+      favorite: false ,
     }
   },
   components: {
@@ -97,7 +97,7 @@ export default {
     Spilt
   },
   created: function () {
-    this.$http.get('http://localhost:8888/shop').then(function (response) {
+    this.$http.get('/d2/shop').then(function (response) {
       this.seller = response.data
       console.log(this.msg)
     }, function (response) {

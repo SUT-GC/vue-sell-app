@@ -68,7 +68,7 @@ export default {
   props: {
   },
   created: function () {
-    this.$http.get('http://localhost:8888/groups').then(function (response) {
+    this.$http.get('/d2/groups').then(function (response) {
       this.groups = response.data
       this.$nextTick(() => {
         this._initScroll()
@@ -77,7 +77,7 @@ export default {
     }, function (response) {
       this.msg = 'get data error'
     })
-    this.$http.get('http://localhost:8888/shop').then(function (response) {
+    this.$http.get('/d2/shop').then(function (response) {
       this.seller = response.data
       console.log(this.seller)
     }, function (response) {
